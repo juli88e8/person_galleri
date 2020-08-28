@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" href="">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;900&display=swap" rel="stylesheet">
+</head>
+
+<style>
+    article {
+        text-align: center;
+        font-family: 'Roboto', sans-serif;
+        padding-bottom: 50px;
+        line-height: 0.5;
+
+    }
+
+    img {
+        width: 250px;
+        height: 250px;
+        object-fit: cover;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        border-radius: 50%;
+    }
+
+    section {
+        width: 90vw;
+        max-width: 1100px;
+        display: grid;
+        grid-gap: 15px;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        margin: 0 auto;
+
+    }
+
+    h1 {
+        text-align: center;
+        padding-bottom: 70px;
+        padding-top: 10px;
+        font-family: 'Roboto', sans-serif;
+        font-size: 4rem;
+    }
+</style>
+
+
+
+
+<body>
+
+    <h1>MEET THE TEAM</h1>
+
+    <section id="container"></section>
+
+
+    <template>
+        <article>
+            <img src="" alt="">
+            <h2 class="navn"></h2>
+            <p class="job"></p>
+            <p class="hobby"></p>
+        </article>
+    </template>
+
+
+
+
+    <script>
+        const container = document.querySelector("#container");
+        const template = document.querySelector("template");
+
+        const link = "https://spreadsheets.google.com/feeds/list/1mtHhpoEkYqVqr1TSnKQ1_sQZWI7FRVjcw3H1oatDOVQ/od6/public/values?alt=json"
+
+
+        async function hentData() {
+            const respons = await fetch(link);
+            const json = await respons.json();
+            vis(json);
+        }
+
+        function vis(personer) {
+            console.log(personer);
+
+            //Løb gennem array
+            personer.feed.entry.forEach(person => {
+                const klon = template.cloneNode(true).content;
+                klon.querySelector(".navn").textContent = `${person.gsx$navn.$t} ${person.gsx$efternavn.$t}`;
+                klon.querySelector("img").src = person.gsx$billede.$t;
+                klon.querySelector(".job").textContent = `Job: ${person.gsx$job.$t}`;
+                klon.querySelector(".hobby").textContent = `Hobby: ${person.gsx$hobby.$t}`;
+                container.appendChild(klon);
+            })
+        }
+
+        hentData();
+    </script>
+</body></html>
